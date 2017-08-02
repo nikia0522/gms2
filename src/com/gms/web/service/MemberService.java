@@ -12,4 +12,5 @@ public interface MemberService {
 	public List<MemberBean> findByName(String name);
 	public String modify(MemberBean member);
 	public String remove(String id);
+	public String login(MemberBean member);
 }

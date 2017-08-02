@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.gms.web.util.DispatcherServlet;
 
-@WebServlet({"/member.do"})
+@WebServlet({"/grade.do"})
 public class GradeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

@@ -1,10 +1,10 @@
 package com.gms.web.service;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.gms.web.dao.MemberDAOImpl;
 import com.gms.web.domain.MemberBean;
 import com.gms.web.service.MemberService;
+import com.sun.xml.internal.ws.wsdl.writer.document.Service;
 
 public class MemberServiceImpl implements MemberService{
 	public static MemberServiceImpl getInstance(){
@@ -48,5 +48,13 @@ public class MemberServiceImpl implements MemberService{
 		int rs=Integer.parseInt(MemberDAOImpl.getInstance().deleteMember(id));
 		return (rs==1)?"실패":"성공";
 	}
+	@Override
+	public String login(MemberBean member) {
+		String page="";
+		MemberBean m=findById(member.getId());
+		System.out.println("비번:::::"+member.getPassword());
+		return (m!=null)?(member.getPassword().equals(m.getPassword()))?"main":"login_fail":"join";
+		/*3항 2번 쓴거*/	
+		}
 }
 

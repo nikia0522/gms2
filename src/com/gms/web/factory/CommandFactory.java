@@ -1,7 +1,6 @@
 package com.gms.web.factory;
 
-import com.gms.web.command.Command;
-import com.gms.web.command.MoveCommand;
+import com.gms.web.command.*;
 import com.gms.web.constants.Action;
 
 public class CommandFactory {
@@ -9,9 +8,10 @@ public class CommandFactory {
 		String dir,String action,String page){
 		Command cmd=null;
 		switch (action) {
-		case Action.MOVE:cmd=new MoveCommand(dir,action,page);
-			break;
-
+		case Action.MOVE: case Action.LOGIN: 
+			cmd=new MoveCommand(dir,action,page);break;
+		
+			
 		default:System.out.println("Command Fail");
 			break;
 		}

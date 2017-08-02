@@ -36,7 +36,7 @@ public class Command implements Commandable{
 
 	@Override
 	public void process() {
-		this.view= Path.VIEW + dir+Path.SEPARATOR+page+ Extension.JSP;
+		this.view= Path.VIEW +dir+Path.SEPARATOR+page+Extension.JSP;
 	}
 	
 	@Override

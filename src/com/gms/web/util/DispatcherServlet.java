@@ -8,6 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DispatcherServlet {
 	public static void send(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		request.getRequestDispatcher("/WEB-INF/view/"+Separator.init(request)+"/"+request.getParameter("page")+".jsp").forward(request, response);
+		request.getRequestDispatcher(Separator.cmd.getView()).forward(request, response);
 	}
 }
