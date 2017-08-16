@@ -71,7 +71,7 @@ public class MemberDAOImpl implements MemberDAO{
 	public MemberBean selectById(String id) {
 		MemberBean member=null;
 		try {
-			PreparedStatement pstmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.MEMBER_FINDBYID);
+			PreparedStatement pstmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement("SELECT * FROM Member WHERE member_id=?");
 			pstmt.setString(1, id);
 			ResultSet rs=pstmt.executeQuery();
 			if(rs.next()){

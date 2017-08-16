@@ -1,10 +1,11 @@
 package com.gms.web.service;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gms.web.dao.MemberDAOImpl;
 import com.gms.web.domain.MemberBean;
 import com.gms.web.service.MemberService;
-import com.sun.xml.internal.ws.wsdl.writer.document.Service;
 
 public class MemberServiceImpl implements MemberService{
 	public static MemberServiceImpl getInstance(){
@@ -49,12 +50,16 @@ public class MemberServiceImpl implements MemberService{
 		return (rs==1)?"실패":"성공";
 	}
 	@Override
-	public String login(MemberBean member) {
-		String page="";
-		MemberBean m=findById(member.getId());
+	public Map<String,Object> login(MemberBean member) {
+		Map<String,Object> map=new HashMap<>();
+		MemberBean mem=findById(member.getId());
+		System.out.println("아이디야~~" + member.getId());
+		String page=(mem!=null)?((member.getPassword().equals(mem.getPassword()))?"main":"login_fail"):"join";
 		System.out.println("비번:::::"+member.getPassword());
-		return (m!=null)?(member.getPassword().equals(m.getPassword()))?"main":"login_fail":"join";
 		/*3항 2번 쓴거*/	
+		map.put("page", page);
+		map.put("user", mem);
+		return map;
 		}
 }
 

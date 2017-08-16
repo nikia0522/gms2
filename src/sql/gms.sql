@@ -41,7 +41,7 @@ CREATE TABLE Major(
 	PRIMARY KEY(major_id)
 	);
 --DML
-INSERT INTO Subject(subj_id, title, major_id) VALUES('','','')
+INSERT INTO Subject(subj_id, title, major_id) VALUES('','','');
 	
 
 
@@ -172,6 +172,21 @@ FROM ( SELECT DISTINCT
         AND SJ.SUBJ_ID=G.SUBJ_ID) T
     WHERE T.ID='cho'; 
     
+-- group by 해서 학생 각각의 avg를 추출하고 rownum을 사용해서 3등까지 뽑는법
+SELECT rownum No, t2.*
+FROM (select t.id id, avg(score) avg
+    from( SELECT
+        M.MEMBER_ID ID,
+        G.SCORE score
+    FROM Grade g
+        inner join Subject s on g.subj_id=s.subj_id
+        inner join Member m on m.member_id=g.member_id
+    )t
+    group by t.id
+    order by avg(score) desc)t2
+WHERE rownum<4;
+
+commit;
     
     
 -- *******************
@@ -231,7 +246,7 @@ FROM ( SELECT
         M.MEMBER_ID ID, M.NAME name,
         G.SCORE score, G.EXAM_DATE
     FROM Grade g
-        join Subject s on g.subj_id=s.subj_id
-        join Member m on m.member_id=g.member_id
+        inner join Subject s on g.subj_id=s.subj_id
+        inner join Member m on m.member_id=g.member_id
  )t
     WHERE T.ID='cho'; 

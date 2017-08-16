@@ -9,27 +9,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gms.web.util.DispatcherServlet;
+import com.gms.web.util.Separator;
 
 @WebServlet({"/member.do"})
 public class MemberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("MemberController Get 진입");
-		DispatcherServlet.send(request, response);
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("MemberController 진입");
+		Separator.init(request);
 		switch (request.getParameter("action")) {
 		case "move":
 			DispatcherServlet.send(request, response);
 			break;
 
+		case "add":
+			DispatcherServlet.send(request, response);
+			
 		default:
 			break;
 		}
-	}
-
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Do Post 진입");
 	}
 
 }

@@ -14,7 +14,7 @@ public class DB {
 	public static final String USERNAME="hanbit";
 	public static final String PASSWORD="hanbit";
 	public static final String TABLE_MEMBER="Member";
-	public static final String MEMBER_ID="id";
+	public static final String MEMBER_ID="member_id";
 	public static final String MEMBER_NAME="name";
 	public static final String MEMBER_PASS="password";
 	public static final String MEMBER_SSN="ssn";
