@@ -42,7 +42,8 @@ CREATE TABLE Major(
 	);
 --DML
 INSERT INTO Subject(subj_id, title, major_id) VALUES('','','');
-	
+alter table major add member_id varchar2(10);
+alter table major add subj_id varchar2(10);
 
 
 -- *******************

@@ -18,6 +18,9 @@ public class DB {
 	public static final String MEMBER_NAME="name";
 	public static final String MEMBER_PASS="password";
 	public static final String MEMBER_SSN="ssn";
+	public static final String MEMBER_EMAIL="email";
+	public static final String MEMBER_Phone="phone";
+	public static final String MEMBER_MAJOR="major";
 	public static final String TABLE_BOARD="board";
 	public static final String BOARD_ARTICLE_SEQ="article_seq";
 	public static final String BOARD_TITLE="title";

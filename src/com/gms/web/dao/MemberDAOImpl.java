@@ -21,9 +21,13 @@ public class MemberDAOImpl implements MemberDAO{
 		try {
 			PreparedStatement pstmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.MEMBER_INSERT);
 			pstmt.setString(1,member.getId());
-			pstmt.setString(2,member.getName());
-			pstmt.setString(3,member.getPassword());
+			pstmt.setString(2,member.getPassword());
+			pstmt.setString(3,member.getName());
 			pstmt.setString(4,member.getSsn());
+			pstmt.setString(5,member.getEmail());
+			pstmt.setString(6,member.getPhone());
+			pstmt.setString(7,member.getMajor());
+			
 			rs=pstmt.executeUpdate();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

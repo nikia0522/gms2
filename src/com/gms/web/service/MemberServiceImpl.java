@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gms.web.dao.MemberDAOImpl;
+import com.gms.web.domain.MajorBean;
 import com.gms.web.domain.MemberBean;
 import com.gms.web.service.MemberService;
 
@@ -14,9 +15,17 @@ public class MemberServiceImpl implements MemberService{
 	private MemberServiceImpl(){}
 	
 	@Override
-	public String addMember(MemberBean member) {
-		return (MemberDAOImpl.getInstance().insert(member).equals("1"))? "성공":"실패";
+	public String addMember(Map<String, Object> map) {
+		System.out.println("member service 진입");
+		MemberBean m=(MemberBean)map.get("member");
+		System.out.println("넘어온 회원 정보:"+m.toString());
+		@SuppressWarnings("unchecked")
+		List<MajorBean>list=(List<MajorBean>)map.get("major");
+		System.out.println("넘어온 수강과목:"+list);
+		
+		return null;
 	}
+	//(MemberDAOImpl.getInstance().insert(member).equals("1"))? "성공":"실패"
 		
 	@Override
 	public List<MemberBean> getMembers() {		
