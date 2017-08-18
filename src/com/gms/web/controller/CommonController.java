@@ -32,6 +32,7 @@ public class CommonController extends HttpServlet {
 			break;
 		case Action.LOGIN:
 			MemberService service=MemberServiceImpl.getInstance();
+			System.out.println("###"+request.getParameter("login_id"));
 			MemberBean mem=new MemberBean();
 			mem.setId(request.getParameter("login_id"));
 			mem.setPassword(request.getParameter("pass"));

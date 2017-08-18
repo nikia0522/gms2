@@ -43,7 +43,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 				board=new ArticleBean();
 				board.setArticleSeq(rs.getInt(DB.BOARD_ARTICLE_SEQ));
 				board.setId(rs.getString(DB.MEMBER_ID));
-				board.setTitle(rs.getString(DB.BOARD_TITLE));
+				board.setTitle(rs.getString(DB.TITLE));
 				board.setContent(rs.getString(DB.BOARD_CONTENT));
 				board.setHitcount(rs.getInt(DB.BOARD_HITCOUNT));
 				board.setRegdate(rs.getString(DB.REGDATE));
@@ -69,7 +69,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 			board=new ArticleBean();
 			board.setArticleSeq(Integer.parseInt(rs.getString(DB.BOARD_ARTICLE_SEQ)));
 			board.setId(rs.getString(DB.MEMBER_ID));
-			board.setTitle(rs.getString(DB.BOARD_TITLE));
+			board.setTitle(rs.getString(DB.TITLE));
 			board.setContent(rs.getString(DB.BOARD_CONTENT));
 			board.setHitcount(Integer.parseInt(rs.getString(DB.BOARD_HITCOUNT)));
 			board.setRegdate(rs.getString(DB.REGDATE));
@@ -93,7 +93,7 @@ public class ArticleDAOImpl implements ArticleDAO{
 				board=new ArticleBean();
 				board.setArticleSeq(Integer.parseInt(rs.getString(DB.BOARD_ARTICLE_SEQ)));
 				board.setId(rs.getString(DB.MEMBER_ID));
-				board.setTitle(rs.getString(DB.BOARD_TITLE));
+				board.setTitle(rs.getString(DB.TITLE));
 				board.setContent(rs.getString(DB.BOARD_CONTENT));
 				board.setHitcount(Integer.parseInt(rs.getString(DB.BOARD_HITCOUNT)));
 				board.setRegdate(rs.getString(DB.REGDATE));

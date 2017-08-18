@@ -251,3 +251,22 @@ FROM ( SELECT
         inner join Member m on m.member_id=g.member_id
  )t
     WHERE T.ID='cho'; 
+
+drop view student;
+create view student (num,id,name,ssn,phone,email,title,regdate)
+as
+select rownum , t.id, t.name, t.ssn, t.phone, t.email, t.title, t.regdate
+from (
+    select a.member_id id, a.name, rpad(substr(a.ssn,1,8),14, '*') ssn, a.phone, a.email , 
+    listagg(s.title, ',') within group (order by s.title) title, to_char(a.regdate,'yyyy/mm/dd') regdate 
+    from member a
+        left outer join major m on a.member_id like m.member_id
+        left join subject s on m.subj_id like s.subj_id
+    group by a.member_id, a.name, a.ssn, a.phone, a.email, a.regdate
+    order by regdate 
+) t
+order by rownum desc
+;  
+
+SELECT * FROM STUDENT WHERE NUM>(SELECT COUNT(*)-5 FROM STUDENT);
+

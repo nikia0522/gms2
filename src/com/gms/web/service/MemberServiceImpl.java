@@ -22,13 +22,14 @@ public class MemberServiceImpl implements MemberService{
 		@SuppressWarnings("unchecked")
 		List<MajorBean>list=(List<MajorBean>)map.get("major");
 		System.out.println("넘어온 수강과목:"+list);
+		MemberDAOImpl.getInstance().insert(map);
 		
 		return null;
 	}
 	//(MemberDAOImpl.getInstance().insert(member).equals("1"))? "성공":"실패"
 		
 	@Override
-	public List<MemberBean> getMembers() {		
+	public List<?> getMembers() {		
 		return (MemberDAOImpl.getInstance().selectAll());
 	}
 	
@@ -43,7 +44,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public List<MemberBean> findByName(String name) {
+	public List<?> findByName(String name) {
 		return MemberDAOImpl.getInstance().selectByName(name);
 	}
 

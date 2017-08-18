@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gms.web.constants.Action;
 import com.gms.web.domain.MajorBean;
 import com.gms.web.domain.MemberBean;
+import com.gms.web.domain.StudentBean;
 import com.gms.web.service.MemberService;
 import com.gms.web.service.MemberServiceImpl;
 import com.gms.web.util.DispatcherServlet;
@@ -42,13 +44,16 @@ public class MemberController extends HttpServlet {
 			member.setSsn((String)map.get("ssn"));
 			member.setEmail((String)map.get("email"));
 			member.setPhone((String)map.get("phone"));
+			member.setProfile((String)map.get("profile"));
+			
 			//major는 여러 행을 입력해야함
 
-			String[] subjects=((String)map.get("name")).split(",");
+			String[] subjects=((String)map.get("subject")).split(",");
 			List<MajorBean> list=new ArrayList<>();
 			MajorBean major=null;
 			for(int i=0; i<subjects.length;i++){
 				major=new MajorBean();
+				major.setMajorId(String.valueOf((int)((Math.random() * 9999) + 1000)));
 				major.setId((String)map.get("id"));
 				major.setTitle((String)map.get("name"));				
 				major.setSubjId(subjects[i]);	
@@ -57,11 +62,25 @@ public class MemberController extends HttpServlet {
 			Map<String, Object>tempMap=new HashMap<>();
 			tempMap.put("member", member);
 			tempMap.put("major", list);
-			service.addMember(tempMap);
+			String rs=service.addMember(tempMap);
+			Separator.cmd.setDirectory("common");
+			Separator.cmd.process();
 			System.out.println("id"+map.get("id"));		
 			DispatcherServlet.send(request, response);
 			break;
-		default:
+		
+		case Action.LIST:
+			System.out.println("Member List Enter");
+			@SuppressWarnings("unchecked") 
+			List<StudentBean> memberlist=(List<StudentBean>)service.getMembers();
+			System.out.println("DB에서 가져온 MemberList"+memberlist);
+			request.setAttribute("prevBlock", "0");
+			request.setAttribute("pageNumber", request.getParameter("pageNumber"));
+			request.setAttribute("list", memberlist);
+			DispatcherServlet.send(request, response);
+			break;
+		
+		default: System.out.println("FAIL...");
 			break;
 		}
 	}
