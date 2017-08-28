@@ -29,8 +29,8 @@ public class MemberServiceImpl implements MemberService{
 	//(MemberDAOImpl.getInstance().insert(member).equals("1"))? "성공":"실패"
 		
 	@Override
-	public List<?> getMembers() {		
-		return (MemberDAOImpl.getInstance().selectAll());
+	public List<?> list(Object o) {		
+		return (MemberDAOImpl.getInstance().selectAll(o));
 	}
 	
 	@Override

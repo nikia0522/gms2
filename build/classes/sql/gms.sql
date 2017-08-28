@@ -269,4 +269,14 @@ order by rownum desc
 ;  
 
 SELECT * FROM STUDENT WHERE NUM>(SELECT COUNT(*)-5 FROM STUDENT);
+select t2.*
+from(select rownum seq, t.* from (select * from student order by num desc) t) t2
+where t2.seq between 1 and 5
+;
+
+
+select t2.*
+from(select rownum seq, t.* from (select * from student where name like '%홍%' order by num desc) t) t2
+where t2.seq between 1 and 5
+;
 

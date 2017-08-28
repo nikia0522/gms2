@@ -8,7 +8,7 @@ public class CommandFactory {
 		String dir,String action,String page){
 		Command cmd=null;
 		switch (action) {
-		case Action.MOVE: case Action.LOGIN: case Action.LOGOUT: case Action.JOIN: case Action.LIST:
+		case Action.MOVE: case Action.LOGIN: case Action.LOGOUT: case Action.JOIN: case Action.LIST: case Action.UPDATE: case Action.DELETE: case Action.DETAIL: case Action.SEARCH:
 			cmd=new MoveCommand(dir,action,page);break;
 		
 		default:System.out.println("Command Fail");

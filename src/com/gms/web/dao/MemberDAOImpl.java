@@ -70,7 +70,7 @@ public class MemberDAOImpl implements MemberDAO{
 	public String countMembers() {
 		int count=0;
 		try {
-			ResultSet rs=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.MEMBER_COUNT).executeQuery();			
+			ResultSet rs=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.STUDENT_COUNT).executeQuery();			
 			if(rs.next()){
 				count=rs.getInt("count");
 			}
@@ -82,10 +82,15 @@ public class MemberDAOImpl implements MemberDAO{
 	}
 
 	@Override
-	public List<?> selectAll() {
+	public List<?> selectAll(Object o) {
 		List<StudentBean>list=new ArrayList<>();
+		int[] arr=(int[])o;
 		try {
-			ResultSet rs=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.STUDENT_LIST).executeQuery();
+			conn=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection();
+			PreparedStatement pstmt=conn.prepareStatement(SQL.STUDENT_LIST);
+			pstmt.setString(1, String.valueOf(arr[0]));
+			pstmt.setString(2, String.valueOf(arr[1]));
+			ResultSet rs=pstmt.executeQuery();
 			StudentBean member=null; //지역변수는 반드시 초기화
 			while(rs.next()){ //여러개 호출하기 때문에 while loop
 				member=new StudentBean();
@@ -107,6 +112,40 @@ public class MemberDAOImpl implements MemberDAO{
 		return list;
 	}
 
+
+	@Override
+	public List<?> selectByName(String name) {
+		List<StudentBean> list=new ArrayList<>();
+		System.out.println("DAO name"+name);
+		try {
+			conn=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection();
+			PreparedStatement pstmt=conn.prepareStatement(SQL.STUDENT_SEARCH);
+			pstmt.setString(1, name);
+			ResultSet rs=pstmt.executeQuery();
+			StudentBean member=null; //지역변수는 반드시 초기화
+			while(rs.next()){ //여러개 호출하기 때문에 while loop
+				member=new StudentBean();
+				member.setNum(rs.getString(DB.NUM));
+				member.setId(rs.getString(DB.ID));
+				member.setName(rs.getString(DB.MEMBER_NAME));
+				member.setPhone(rs.getString(DB.MEMBER_PHONE));				
+				member.setEmail(rs.getString(DB.MEMBER_EMAIL));
+				member.setSsn(rs.getString(DB.MEMBER_SSN));
+				member.setRegdate(rs.getString(DB.REGDATE));
+				member.setTitle(rs.getString(DB.TITLE));
+				
+				list.add(member);
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		System.out.println("namelist ****"+list.toString());
+		return list;
+	}
+
+	
 	@Override
 	public MemberBean selectById(String id) {
 		MemberBean member=null;
@@ -127,29 +166,6 @@ public class MemberDAOImpl implements MemberDAO{
 		}
 		
 		return member;
-	}
-
-	@Override
-	public List<MemberBean> selectByName(String name) {
-		List<MemberBean> nameList=new ArrayList<>();
-		try {
-			PreparedStatement pstmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.MEMBER_FINDBYNAME);
-			pstmt.setString(1,name);
-			ResultSet rs=pstmt.executeQuery();
-			MemberBean member=null; //지역변수는 반드시 초기화
-			while(rs.next()){ //여러개 호출하기 때문에 while loop
-				member=new MemberBean();
-				member.setId(rs.getString(DB.MEMBER_ID));
-				member.setName(rs.getString(DB.MEMBER_NAME));
-				member.setSsn(rs.getString(DB.MEMBER_SSN));
-				nameList.add(member);
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-		
-		return nameList;
 	}
 
 	@Override

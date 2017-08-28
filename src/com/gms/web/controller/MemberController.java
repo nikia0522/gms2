@@ -15,6 +15,9 @@ import com.gms.web.constants.Action;
 import com.gms.web.domain.MajorBean;
 import com.gms.web.domain.MemberBean;
 import com.gms.web.domain.StudentBean;
+import com.gms.web.proxy.BlockHandler;
+import com.gms.web.proxy.PageHandler;
+import com.gms.web.proxy.PageProxy;
 import com.gms.web.service.MemberService;
 import com.gms.web.service.MemberServiceImpl;
 import com.gms.web.util.DispatcherServlet;
@@ -30,14 +33,15 @@ public class MemberController extends HttpServlet {
 		Separator.init(request);
 		MemberBean member=new MemberBean();
 		MemberService service=MemberServiceImpl.getInstance();
+		Map<?,?> map = new HashMap();
 		switch (request.getParameter("action")) {
 		case "move":
 			DispatcherServlet.send(request, response);
 			break;
 
-		case "join":
+		case Action.JOIN:
 			System.out.println("=== join 진입 ===");
-			Map<?,?> map=ParamsIterator.execute(request);
+			map=ParamsIterator.execute(request);
 			member.setId((String)map.get("id"));
 			member.setPassword((String)map.get("password"));
 			member.setName((String)map.get("name"));
@@ -71,14 +75,44 @@ public class MemberController extends HttpServlet {
 		
 		case Action.LIST:
 			System.out.println("Member List Enter");
-			@SuppressWarnings("unchecked") 
-			List<StudentBean> memberlist=(List<StudentBean>)service.getMembers();
-			System.out.println("DB에서 가져온 MemberList"+memberlist);
-			request.setAttribute("prevBlock", "0");
-			request.setAttribute("pageNumber", request.getParameter("pageNumber"));
-			request.setAttribute("list", memberlist);
+			PageProxy pxy=new PageProxy(request);
+			pxy.setPageSize(5);
+			pxy.setBlockSize(5);
+			pxy.setTheNumberOfRows(Integer.parseInt(service.countMembers()));
+			pxy.setPageNumber(Integer.parseInt(request.getParameter("pageNumber")));
+			int[] arr=PageHandler.attr(pxy);
+			int[] arr2=BlockHandler.attr(pxy);
+			pxy.execute(arr2, service.list(arr));
 			DispatcherServlet.send(request, response);
 			break;
+		
+		case Action.SEARCH: 
+			System.out.println("member search enter");
+			map=ParamsIterator.execute(request);
+			String name=(String) map.get("search");
+			System.out.println("465465 "+name);
+			request.setAttribute("search", map.get("search"));
+			request.setAttribute("list", service.findByName(name));			
+			DispatcherServlet.send(request, response);
+			break;
+			
+		case Action.UPDATE: 
+			System.out.println("Member Update Enter");
+			service.modify(service.findById(request.getParameter("id")));
+			DispatcherServlet.send(request, response);
+			break;
+			
+		case Action.DELETE: 
+			System.out.println("Member Delete Enter");
+			//service.remove(request.getParameter("id"));
+			response.sendRedirect(request.getContextPath()+"/member.do?action=list&page=member_list&pageNumber=1");
+			break;
+		case Action.DETAIL: 
+			System.out.println("Member Detail Enter");
+			request.setAttribute("student", service.findById(request.getParameter("id")));
+			DispatcherServlet.send(request, response);
+			break;
+		
 		
 		default: System.out.println("FAIL...");
 			break;
