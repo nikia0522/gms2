@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gms.web.command.Command;
 import com.gms.web.dao.MemberDAOImpl;
 import com.gms.web.domain.MajorBean;
 import com.gms.web.domain.MemberBean;
@@ -29,24 +30,25 @@ public class MemberServiceImpl implements MemberService{
 	//(MemberDAOImpl.getInstance().insert(member).equals("1"))? "성공":"실패"
 		
 	@Override
-	public List<?> list(Object o) {		
-		return (MemberDAOImpl.getInstance().selectAll(o));
+	public List<?> list(Command cmd) {		
+		return (MemberDAOImpl.getInstance().selectAll(cmd));
 	}
 	
 	@Override
-	public String countMembers() {
-		return String.valueOf(MemberDAOImpl.getInstance().countMembers());
+	public String countMembers(Command cmd) {
+		return String.valueOf(MemberDAOImpl.getInstance().countMembers(cmd));
 	}
 	
 	@Override
-	public MemberBean findById(String id) {	
-		return MemberDAOImpl.getInstance().selectById(id);
+	public MemberBean findById(Command cmd) {	
+		return MemberDAOImpl.getInstance().selectById(cmd);
 	}
 
 	@Override
-	public List<?> findByName(String name) {
-		return MemberDAOImpl.getInstance().selectByName(name);
-	}
+	public List<?> findByName(Command cmd) {
+		System.out.println("findByName("+cmd.getSearch()+")");
+		return MemberDAOImpl.getInstance().selectByName(cmd);
+		}
 
 	@Override
 	public String modify(MemberBean member) {		
@@ -55,14 +57,16 @@ public class MemberServiceImpl implements MemberService{
 	}
 	
 	@Override
-	public String remove(String id) {
-		int rs=Integer.parseInt(MemberDAOImpl.getInstance().deleteMember(id));
+	public String remove(Command cmd) {
+		int rs=Integer.parseInt(MemberDAOImpl.getInstance().deleteMember(cmd));
 		return (rs==1)?"실패":"성공";
 	}
 	@Override
 	public Map<String,Object> login(MemberBean member) {
 		Map<String,Object> map=new HashMap<>();
-		MemberBean mem=findById(member.getId());
+		Command cmd=new Command();
+		cmd.setSearch(member.getId());
+		MemberBean mem=findById(cmd);
 		System.out.println("아이디야~~" + member.getId());
 		String page=(mem!=null)?((member.getPassword().equals(mem.getPassword()))?"main":"login_fail"):"join";
 		System.out.println("비번:::::"+member.getPassword());

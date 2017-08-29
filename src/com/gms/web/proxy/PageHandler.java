@@ -1,24 +1,24 @@
 package com.gms.web.proxy;
+
+import com.gms.web.command.Command;
+
 //이벤트를 처리하는 기능
 
 public class PageHandler {
 
 
-	public static int[] attr(PageProxy pxy){
-		int[]result=new int[2];
-		int startRow = 0, endRow = 0;
+	public static Command attr(PageProxy pxy){
+		Command cmd=new Command();
 		if (pxy.getPageNumber() <= pxy.getTheNumberOfRows() / pxy.getPageSize() +1){
 			if (pxy.getPageNumber() ==1){
-				startRow=1;
-				endRow=pxy.getPageSize();
+
+				cmd.setStartRow("1");
+				cmd.setEndRow(String.valueOf(pxy.getPageSize()));
 			}else{
-				startRow=(pxy.getPageNumber()-1) * pxy.getPageSize() +1;
-				endRow=pxy.getPageNumber()*pxy.getPageSize();
+				cmd.setStartRow(String.valueOf((pxy.getPageNumber()-1) * pxy.getPageSize() +1));
+				cmd.setEndRow(String.valueOf(pxy.getPageNumber()*pxy.getPageSize()));
 			}
-		}
-		result[0]=startRow;
-		result[1]=endRow;
-		
-		return result;
+		}		
+		return cmd;
 	}
 }

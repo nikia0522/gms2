@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.gms.web.command.Command;
 import com.gms.web.constants.DB;
 import com.gms.web.constants.SQL;
 import com.gms.web.constants.Vendor;
@@ -67,7 +68,7 @@ public class MemberDAOImpl implements MemberDAO{
 	}
 
 	@Override
-	public String countMembers() {
+	public String countMembers(Command cmd) {
 		int count=0;
 		try {
 			ResultSet rs=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.STUDENT_COUNT).executeQuery();			
@@ -82,14 +83,13 @@ public class MemberDAOImpl implements MemberDAO{
 	}
 
 	@Override
-	public List<?> selectAll(Object o) {
+	public List<?> selectAll(Command cmd) {
 		List<StudentBean>list=new ArrayList<>();
-		int[] arr=(int[])o;
 		try {
 			conn=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection();
 			PreparedStatement pstmt=conn.prepareStatement(SQL.STUDENT_LIST);
-			pstmt.setString(1, String.valueOf(arr[0]));
-			pstmt.setString(2, String.valueOf(arr[1]));
+			pstmt.setString(1, cmd.getStartRow());
+			pstmt.setString(2, cmd.getEndRow());
 			ResultSet rs=pstmt.executeQuery();
 			StudentBean member=null; //지역변수는 반드시 초기화
 			while(rs.next()){ //여러개 호출하기 때문에 while loop
@@ -114,13 +114,13 @@ public class MemberDAOImpl implements MemberDAO{
 
 
 	@Override
-	public List<?> selectByName(String name) {
+	public List<?> selectByName(Command cmd) {
 		List<StudentBean> list=new ArrayList<>();
-		System.out.println("DAO name"+name);
+		System.out.println("DAO name"+cmd.getSearch());
 		try {
 			conn=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection();
 			PreparedStatement pstmt=conn.prepareStatement(SQL.STUDENT_SEARCH);
-			pstmt.setString(1, name);
+			pstmt.setString(1, cmd.getSearch());
 			ResultSet rs=pstmt.executeQuery();
 			StudentBean member=null; //지역변수는 반드시 초기화
 			while(rs.next()){ //여러개 호출하기 때문에 while loop
@@ -147,11 +147,11 @@ public class MemberDAOImpl implements MemberDAO{
 
 	
 	@Override
-	public MemberBean selectById(String id) {
+	public MemberBean selectById(Command cmd) {
 		MemberBean member=null;
 		try {
 			PreparedStatement pstmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement("SELECT * FROM Member WHERE member_id=?");
-			pstmt.setString(1, id);
+			pstmt.setString(1, cmd.getSearch());
 			ResultSet rs=pstmt.executeQuery();
 			if(rs.next()){
 				member=new MemberBean();
@@ -170,7 +170,7 @@ public class MemberDAOImpl implements MemberDAO{
 
 	@Override
 	public String updatePass(MemberBean member) {
-		String rs="";;
+		String rs="";
 		try {
 			PreparedStatement psmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.MEMBER_UPDATE);
 			psmt.setString(1, member.getPassword());
@@ -187,11 +187,11 @@ public class MemberDAOImpl implements MemberDAO{
 	}
 
 	@Override
-	public String deleteMember(String id) {
+	public String deleteMember(Command cmd) {
 		String rs="";
 		try {
 			PreparedStatement psmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.MEMBER_DELETE);
-			psmt.setString(1,id);
+			psmt.setString(1,cmd.getSearch());
 			rs=String.valueOf(psmt.executeUpdate());		
 			} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -8,7 +8,7 @@ public class BlockHandler{
 		int theNumberOfPages=0,
 				startPage=0,
 				endPage=0;
-		theNumberOfPages = (pxy.getTheNumberOfRows() % pxy.getPageSize())==0 ?
+		theNumberOfPages = (pxy.getTheNumberOfRows() % pxy.getPageSize()) == 0 ?
 				pxy.getTheNumberOfRows() / pxy.getPageSize()
 				: pxy.getTheNumberOfRows() / pxy.getPageSize() +1;
 		startPage = pxy.getPageNumber() - ((pxy.getPageNumber() -1) % pxy.getBlockSize());

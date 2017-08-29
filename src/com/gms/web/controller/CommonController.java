@@ -17,7 +17,7 @@ import com.gms.web.service.MemberServiceImpl;
 import com.gms.web.util.DispatcherServlet;
 import com.gms.web.util.Separator;
 
-@WebServlet("/common.do")
+@WebServlet({"/home.do","/common.do"})
 public class CommonController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +26,7 @@ public class CommonController extends HttpServlet {
 		MemberBean member=new MemberBean();
 		System.out.println("CommonController 진입");
 		Separator.init(request);
-		switch (request.getParameter(Action.CMD)) {
+		switch (Separator.cmd.getAction()) {
 		case Action.MOVE:
 			DispatcherServlet.send(request, response);
 			break;

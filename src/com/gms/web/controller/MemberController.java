@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gms.web.command.Command;
 import com.gms.web.constants.Action;
 import com.gms.web.domain.MajorBean;
 import com.gms.web.domain.MemberBean;
-import com.gms.web.domain.StudentBean;
 import com.gms.web.proxy.BlockHandler;
 import com.gms.web.proxy.PageHandler;
 import com.gms.web.proxy.PageProxy;
@@ -33,7 +33,11 @@ public class MemberController extends HttpServlet {
 		Separator.init(request);
 		MemberBean member=new MemberBean();
 		MemberService service=MemberServiceImpl.getInstance();
-		Map<?,?> map = new HashMap();
+		Map<?,?> map = new HashMap<>();
+		PageProxy pxy=new PageProxy(request);
+		Command cmd=new Command();
+		pxy.setBlockSize(5);
+		pxy.setPageSize(5);
 		switch (request.getParameter("action")) {
 		case "move":
 			DispatcherServlet.send(request, response);
@@ -67,7 +71,7 @@ public class MemberController extends HttpServlet {
 			tempMap.put("member", member);
 			tempMap.put("major", list);
 			String rs=service.addMember(tempMap);
-			Separator.cmd.setDirectory("common");
+			Separator.cmd.setDir("common");
 			Separator.cmd.process();
 			System.out.println("id"+map.get("id"));		
 			DispatcherServlet.send(request, response);
@@ -75,30 +79,28 @@ public class MemberController extends HttpServlet {
 		
 		case Action.LIST:
 			System.out.println("Member List Enter");
-			PageProxy pxy=new PageProxy(request);
-			pxy.setPageSize(5);
-			pxy.setBlockSize(5);
-			pxy.setTheNumberOfRows(Integer.parseInt(service.countMembers()));
+			
+			pxy.setTheNumberOfRows(Integer.parseInt(service.countMembers(cmd)));
 			pxy.setPageNumber(Integer.parseInt(request.getParameter("pageNumber")));
-			int[] arr=PageHandler.attr(pxy);
-			int[] arr2=BlockHandler.attr(pxy);
-			pxy.execute(arr2, service.list(arr));
+			pxy.execute(BlockHandler.attr(pxy), service.list(PageHandler.attr(pxy)));
 			DispatcherServlet.send(request, response);
 			break;
 		
 		case Action.SEARCH: 
 			System.out.println("member search enter");
-			map=ParamsIterator.execute(request);
-			String name=(String) map.get("search");
-			System.out.println("465465 "+name);
-			request.setAttribute("search", map.get("search"));
-			request.setAttribute("list", service.findByName(name));			
+			map=ParamsIterator.execute(request);	
+			pxy.setTheNumberOfRows(Integer.parseInt(service.countMembers(cmd)));
+			cmd=PageHandler.attr(pxy);
+			cmd.setColumn("name");
+			cmd.setSearch(String.valueOf(map.get("search")));
+			request.setAttribute("list", service.findByName(cmd));
 			DispatcherServlet.send(request, response);
 			break;
 			
 		case Action.UPDATE: 
 			System.out.println("Member Update Enter");
-			service.modify(service.findById(request.getParameter("id")));
+			cmd.setSearch(request.getParameter("id"));
+			service.modify(service.findById(cmd));
 			DispatcherServlet.send(request, response);
 			break;
 			
@@ -109,7 +111,8 @@ public class MemberController extends HttpServlet {
 			break;
 		case Action.DETAIL: 
 			System.out.println("Member Detail Enter");
-			request.setAttribute("student", service.findById(request.getParameter("id")));
+			cmd.setSearch(request.getParameter("id"));
+			request.setAttribute("student", service.findById(cmd));
 			DispatcherServlet.send(request, response);
 			break;
 		
