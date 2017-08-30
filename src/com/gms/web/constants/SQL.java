@@ -22,13 +22,16 @@ public class SQL {
 				+ " from (select rownum rnum, s.* "
 				+ " from student s)t " 
 				+ " where t.rnum between ? and ? ";
-	public static final String STUDENT_COUNT=String.format("SELECT COUNT(*) AS count FROM %s", DB.TABLE_STUDENT);
-	public static final String STUDENT_SEARCH= String.format(" select t2.* " +
+	public static final String STUDENT_COUNT=String.format("SELECT COUNT(*) as count FROM %s WHERE name like ?", DB.TABLE_STUDENT, "name");
+	public static final String STUDENT_SEARCH=" select t2.* " +
 												" from(select rownum seq, t.* " +
 												" from (select * from student " +
-												" where %s like '%' || ? || '%'"  +
-												" order by num desc) t) t2 " +
-												" where t2.seq between 1 and 5 ", ?);
-			
-	   }
+												" where name like '%' || ? || '%'"  +
+												" order by num desc) t) t2 "+
+												" where t2.seq between 1 and 5";
+	public static final String STUDENT_FINDBYNAME=String.format("SELECT * FROM Student WHERE %s like ?", "name");
+	public static final String STUDENT_FINDBYID=String.format("SELECT * FROM %s WHERE id like ?", DB.TABLE_STUDENT);
+	
+
+}
 

@@ -7,6 +7,7 @@ import com.gms.web.command.Command;
 import com.gms.web.dao.MemberDAOImpl;
 import com.gms.web.domain.MajorBean;
 import com.gms.web.domain.MemberBean;
+import com.gms.web.domain.StudentBean;
 import com.gms.web.service.MemberService;
 
 public class MemberServiceImpl implements MemberService{
@@ -40,7 +41,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 	
 	@Override
-	public MemberBean findById(Command cmd) {	
+	public StudentBean findById(Command cmd) {	
 		return MemberDAOImpl.getInstance().selectById(cmd);
 	}
 
@@ -52,8 +53,10 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public String modify(MemberBean member) {		
-		int rs=Integer.parseInt(MemberDAOImpl.getInstance().updatePass(member));
-		return (rs==1)?"성공":"실패";
+		String msg="";
+		/*		int rs=Integer.parseInt(MemberDAOImpl.getInstance().updatePass(member));
+		return (rs==1)?"성공":"실패";*/
+		return msg;
 	}
 	
 	@Override
@@ -66,7 +69,7 @@ public class MemberServiceImpl implements MemberService{
 		Map<String,Object> map=new HashMap<>();
 		Command cmd=new Command();
 		cmd.setSearch(member.getId());
-		MemberBean mem=findById(cmd);
+		MemberBean mem=MemberDAOImpl.getInstance().login(cmd);
 		System.out.println("아이디야~~" + member.getId());
 		String page=(mem!=null)?((member.getPassword().equals(mem.getPassword()))?"main":"login_fail"):"join";
 		System.out.println("비번:::::"+member.getPassword());

@@ -280,3 +280,6 @@ from(select rownum seq, t.* from (select * from student where name like '%홍%' 
 where t2.seq between 1 and 5
 ;
 
+SELECT COUNT(*) AS count FROM Student WHERE name like '%';
+
+SELECT COUNT(*) as count FROM Student WHERE name like '%';

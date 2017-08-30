@@ -69,9 +69,22 @@ public class MemberDAOImpl implements MemberDAO{
 
 	@Override
 	public String countMembers(Command cmd) {
-		int count=0;
+		System.out.println("count("+cmd.getSearch()+")");
+		System.out.println("count("+cmd.getColumn()+")");
+		int count=0;	
 		try {
-			ResultSet rs=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement(SQL.STUDENT_COUNT).executeQuery();			
+			conn=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection();
+			PreparedStatement pstmt=null;
+			if(cmd.getSearch()==null){
+				System.out.println("cmd.getSearch() is null");
+				pstmt=conn.prepareStatement(SQL.STUDENT_COUNT);
+				pstmt.setString(1, "%");
+			}else{
+				System.out.println("cmd.getSearch() is not null");
+				pstmt=conn.prepareStatement(SQL.STUDENT_COUNT);
+				pstmt.setString(1, "%"+cmd.getSearch()+"%");
+					}
+			ResultSet rs=pstmt.executeQuery();
 			if(rs.next()){
 				count=rs.getInt("count");
 			}
@@ -79,6 +92,7 @@ public class MemberDAOImpl implements MemberDAO{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("카운트$$$$$"+count);
 		return String.valueOf((count));
 	}
 
@@ -147,24 +161,29 @@ public class MemberDAOImpl implements MemberDAO{
 
 	
 	@Override
-	public MemberBean selectById(Command cmd) {
-		MemberBean member=null;
+	public StudentBean selectById(Command cmd) {
+		System.out.println("ddd");
+		StudentBean member=null; //지역변수는 반드시 초기화
 		try {
-			PreparedStatement pstmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement("SELECT * FROM Member WHERE member_id=?");
+			conn=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection();
+			PreparedStatement pstmt=conn.prepareStatement(SQL.STUDENT_FINDBYID);
 			pstmt.setString(1, cmd.getSearch());
 			ResultSet rs=pstmt.executeQuery();
-			if(rs.next()){
-				member=new MemberBean();
-				member.setId(rs.getString(DB.MEMBER_ID));
-				member.setPassword(rs.getString(DB.MEMBER_PASS));
+			while(rs.next()){ //여러개 호출하기 때문에 while loop
+				member=new StudentBean();
+				member.setNum(rs.getString(DB.NUM));
+				member.setId(rs.getString(DB.ID));
 				member.setName(rs.getString(DB.MEMBER_NAME));
+				member.setPhone(rs.getString(DB.MEMBER_PHONE));				
+				member.setEmail(rs.getString(DB.MEMBER_EMAIL));
 				member.setSsn(rs.getString(DB.MEMBER_SSN));
+				member.setRegdate(rs.getString(DB.REGDATE));
+				member.setTitle(rs.getString(DB.TITLE));
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}	
 		return member;
 	}
 
@@ -199,5 +218,25 @@ public class MemberDAOImpl implements MemberDAO{
 		}
 		return String.valueOf(rs);
 	}
-
+	@Override
+	public MemberBean login(Command cmd) {
+		MemberBean member=null;
+		try {
+			PreparedStatement pstmt=DatabaseFactory.createDatabase(Vendor.ORACLE, DB.USERNAME, DB.PASSWORD).getConnection().prepareStatement("SELECT * FROM Member WHERE member_id=?");
+			pstmt.setString(1, cmd.getSearch());
+			ResultSet rs=pstmt.executeQuery();
+			if(rs.next()){
+				member=new MemberBean();
+				member.setId(rs.getString(DB.MEMBER_ID));
+				member.setPassword(rs.getString(DB.MEMBER_PASS));
+				member.setName(rs.getString(DB.MEMBER_NAME));
+				member.setSsn(rs.getString(DB.MEMBER_SSN));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return member;
+	}
 }

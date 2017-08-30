@@ -77,30 +77,34 @@ public class MemberController extends HttpServlet {
 			DispatcherServlet.send(request, response);
 			break;
 		
-		case Action.LIST:
+case Action.LIST:
 			System.out.println("Member List Enter");
-			
 			pxy.setTheNumberOfRows(Integer.parseInt(service.countMembers(cmd)));
 			pxy.setPageNumber(Integer.parseInt(request.getParameter("pageNumber")));
 			pxy.execute(BlockHandler.attr(pxy), service.list(PageHandler.attr(pxy)));
 			DispatcherServlet.send(request, response);
 			break;
-		
+
 		case Action.SEARCH: 
 			System.out.println("member search enter");
 			map=ParamsIterator.execute(request);	
-			pxy.setTheNumberOfRows(Integer.parseInt(service.countMembers(cmd)));
 			cmd=PageHandler.attr(pxy);
 			cmd.setColumn("name");
 			cmd.setSearch(String.valueOf(map.get("search")));
-			request.setAttribute("list", service.findByName(cmd));
+			cmd.setStartRow(PageHandler.attr(pxy).getStartRow());
+			cmd.setEndRow(PageHandler.attr(pxy).getEndRow());
+			cmd.setPageNumber(request.getParameter("pageNumber"));
+			pxy.setTheNumberOfRows(Integer.parseInt(service.countMembers(cmd)));
+			pxy.setPageNumber(Integer.parseInt(cmd.getPageNumber()));
+			pxy.execute(BlockHandler.attr(pxy), service.findByName(cmd));
 			DispatcherServlet.send(request, response);
+			
 			break;
 			
 		case Action.UPDATE: 
 			System.out.println("Member Update Enter");
 			cmd.setSearch(request.getParameter("id"));
-			service.modify(service.findById(cmd));
+			//service.modify(service.findById(cmd));
 			DispatcherServlet.send(request, response);
 			break;
 			
